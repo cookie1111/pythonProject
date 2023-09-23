@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Scraped Data</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <h1>Scraped Listings</h1>
+    <table border="1" id="listings-table">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Image URL</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Data will be populated here using AJAX -->
+        </tbody>
+    </table>
+
+    <script>
+        function fetchListings() {
+            $.ajax({
+                url: '/get_listings',
+                method: 'GET',
+                success: function(data) {
+                    let listings = data.listings;
+                    let tableBody = $("#listings-table tbody");
+                    tableBody.empty();  // Clear existing data
+                    listings.forEach(listing => {
+                        tableBody.append(`
+                            <tr>
+                                <td>${listing[0]}</td>
+                                <td>
+                                    <a href="${listing[1]}" target="_blank">
+                                        <img src="${listing[1]}" alt="${listing[0]}" width="100"> <!-- Adjust width as needed -->
+                                    </a>
+                                </td>
+                            </tr>
+                        `);
+                    });
+                }
+            });
+        }
+
+
+        setInterval(fetchListings, 5000);
+    </script>
+</body>
+</html>
+

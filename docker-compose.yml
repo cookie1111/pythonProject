@@ -1,0 +1,29 @@
+version: "3.8"
+
+services:
+  db:
+    build: ./db/
+    ports:
+      - "5432:5432"
+    networks:
+      - db_baby
+
+  app:
+    build: ./app/
+    ports:
+      - "8080:8080"
+    depends_on:
+      - scrappy
+    networks:
+      - db_baby
+
+  scrappy:
+    build: ./scrappy/
+    command: /wait-for-it/wait-for-it.sh db:5432 -- scrapy crawl flats -L INFO
+    depends_on:
+      - db
+    networks:
+      - db_baby
+
+networks:
+  db_baby:
